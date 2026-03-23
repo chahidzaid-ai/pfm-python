@@ -16,7 +16,7 @@ def add_student(request):
         gender = request.POST.get('gender')
         date_of_birth = request.POST.get('date_of_birth')
         student_class = request.POST.get('student_class')
-        religion = request.POST.get('religion')
+        religion = request.POST.get('religion', '')
         joining_date = request.POST.get('joining_date')
         mobile_number = request.POST.get('mobile_number')
         admission_number = request.POST.get('admission_number')
@@ -182,3 +182,41 @@ def delete_timetable(request, timetable_id):
 def holiday_list(request):
     holidays = Holiday.objects.all().order_by('holiday_date')
     return render(request, 'students/holidays.html', {'holidays': holidays})
+
+
+def add_holiday(request):
+    if request.method == 'POST':
+        Holiday.objects.create(
+            title=request.POST.get('title'),
+            holiday_date=request.POST.get('holiday_date'),
+            description=request.POST.get('description'),
+        )
+        messages.success(request, 'Holiday added successfully.')
+        return redirect('holiday_list')
+
+    return render(request, 'students/add-holiday.html')
+
+
+def edit_holiday(request, holiday_id):
+    holiday = get_object_or_404(Holiday, id=holiday_id)
+
+    if request.method == 'POST':
+        holiday.title = request.POST.get('title')
+        holiday.holiday_date = request.POST.get('holiday_date')
+        holiday.description = request.POST.get('description')
+        holiday.save()
+
+        messages.success(request, 'Holiday updated successfully.')
+        return redirect('holiday_list')
+
+    return render(request, 'students/edit-holiday.html', {'holiday': holiday})
+
+
+def delete_holiday(request, holiday_id):
+    holiday = get_object_or_404(Holiday, id=holiday_id)
+
+    if request.method == 'POST':
+        holiday.delete()
+        messages.success(request, 'Holiday deleted successfully.')
+
+    return redirect('holiday_list')

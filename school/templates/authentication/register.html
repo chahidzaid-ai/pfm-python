@@ -1,61 +1,168 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0ecff, #f4f7fb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-box {
+            width: 100%;
+            max-width: 480px;
+            background: #ffffff;
+            padding: 35px 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .auth-box h1 {
+            margin: 0 0 10px;
+            text-align: center;
+            color: #1e3a8a;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .message {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #374151;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px 14px;
+            margin-bottom: 18px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            background: #2563eb;
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .links {
+            margin-top: 18px;
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .links a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2>Register</h2>
+    <div class="auth-box">
+        <h1>Register</h1>
+        <p class="subtitle">Create your account to continue</p>
 
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message {% if 'error' in message.tags %}error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 
-    <form method="POST">
-        {% csrf_token %}
+        <form method="POST">
+            {% csrf_token %}
 
-        <p>
-            <label>First Name</label><br>
-            <input type="text" name="first_name" required>
-        </p>
+            <label>First Name</label>
+            <input type="text" name="first_name" placeholder="Enter first name" required>
 
-        <p>
-            <label>Last Name</label><br>
-            <input type="text" name="last_name" required>
-        </p>
+            <label>Last Name</label>
+            <input type="text" name="last_name" placeholder="Enter last name" required>
 
-        <p>
-            <label>Email</label><br>
-            <input type="email" name="email" required>
-        </p>
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter email" required>
 
-        <p>
-            <label>Password</label><br>
-            <input type="password" name="password" required>
-        </p>
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
 
-        <p>
-            <label>Confirm Password</label><br>
-            <input type="password" name="confirm_password" required>
-        </p>
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" placeholder="Confirm password" required>
 
-        <p>
-            <label>Role</label><br>
+            <label>Role</label>
             <select name="role" required>
-                <option value="">Select Role</option>
+                <option value="">Select role</option>
                 <option value="student">Student</option>
                 <option value="teacher">Teacher</option>
                 <option value="admin">Admin</option>
             </select>
-        </p>
 
-        <button type="submit">Register</button>
-    </form>
+            <button type="submit" class="btn">Create Account</button>
+        </form>
 
-    <p><a href="{% url 'login' %}">Already have an account?</a></p>
+        <div class="links">
+            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </div>
+    </div>
 </body>
 </html>

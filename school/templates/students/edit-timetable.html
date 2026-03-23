@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Timetable</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .form-container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            color: #1e3a8a;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #2563eb;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #d97706;
+        }
+
+        .btn-back {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Edit Timetable</h1>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Class</label>
+            <input type="text" name="student_class" value="{{ timetable.student_class }}" required>
+
+            <label>Section</label>
+            <input type="text" name="section" value="{{ timetable.section }}" required>
+
+            <label>Subject</label>
+            <input type="text" name="subject" value="{{ timetable.subject }}" required>
+
+            <label>Teacher</label>
+            <input type="text" name="teacher" value="{{ timetable.teacher }}" required>
+
+            <label>Day</label>
+            <select name="day" required>
+                <option value="Monday" {% if timetable.day == 'Monday' %}selected{% endif %}>Monday</option>
+                <option value="Tuesday" {% if timetable.day == 'Tuesday' %}selected{% endif %}>Tuesday</option>
+                <option value="Wednesday" {% if timetable.day == 'Wednesday' %}selected{% endif %}>Wednesday</option>
+                <option value="Thursday" {% if timetable.day == 'Thursday' %}selected{% endif %}>Thursday</option>
+                <option value="Friday" {% if timetable.day == 'Friday' %}selected{% endif %}>Friday</option>
+                <option value="Saturday" {% if timetable.day == 'Saturday' %}selected{% endif %}>Saturday</option>
+            </select>
+
+            <label>Start time</label>
+            <input type="time" name="start_time" value="{{ timetable.start_time|time:'H:i' }}" required>
+
+            <label>End time</label>
+            <input type="time" name="end_time" value="{{ timetable.end_time|time:'H:i' }}" required>
+
+            <div class="buttons">
+                <button type="submit" class="btn btn-save">Save Changes</button>
+                <a href="{% url 'timetable_list' %}" class="btn btn-back">Back</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

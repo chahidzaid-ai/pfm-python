@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Teacher</title>
+    <style>
+        * { box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #f4f7fb; margin: 0; padding: 30px; }
+        .form-container {
+            max-width: 750px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+        h1 { color: #1e3a8a; margin-bottom: 20px; }
+        label { display: block; margin-bottom: 6px; font-weight: bold; }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+        }
+        .btn {
+            padding: 12px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-save { background: #2563eb; color: white; }
+        .btn-back { background: #6b7280; color: white; margin-left: 10px; }
+        .message {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Add Teacher</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>First Name</label>
+            <input type="text" name="first_name" required>
+
+            <label>Last Name</label>
+            <input type="text" name="last_name" required>
+
+            <label>Teacher ID</label>
+            <input type="text" name="teacher_id" required>
+
+            <label>Email</label>
+            <input type="email" name="email" required>
+
+            <label>Phone</label>
+            <input type="text" name="phone" required>
+
+            <label>Seniority (years)</label>
+            <input type="number" name="seniority" min="1" value="1" required>
+
+            <label>Department</label>
+            <select name="department">
+                <option value="">Select Department</option>
+                {% for department in departments %}
+                    <option value="{{ department.id }}">{{ department.name }}</option>
+                {% endfor %}
+            </select>
+
+            <label>Address</label>
+            <textarea name="address" rows="4"></textarea>
+
+            <button type="submit" class="btn btn-save">Add Teacher</button>
+            <a href="{% url 'teacher_list' %}" class="btn btn-back">Back</a>
+        </form>
+    </div>
+</body>
+</html>
