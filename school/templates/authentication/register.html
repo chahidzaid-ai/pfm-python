@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <h2>Register</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <p>
+            <label>First Name</label><br>
+            <input type="text" name="first_name" required>
+        </p>
+
+        <p>
+            <label>Last Name</label><br>
+            <input type="text" name="last_name" required>
+        </p>
+
+        <p>
+            <label>Email</label><br>
+            <input type="email" name="email" required>
+        </p>
+
+        <p>
+            <label>Password</label><br>
+            <input type="password" name="password" required>
+        </p>
+
+        <p>
+            <label>Confirm Password</label><br>
+            <input type="password" name="confirm_password" required>
+        </p>
+
+        <p>
+            <label>Role</label><br>
+            <select name="role" required>
+                <option value="">Select Role</option>
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+                <option value="admin">Admin</option>
+            </select>
+        </p>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p><a href="{% url 'login' %}">Already have an account?</a></p>
+</body>
+</html>

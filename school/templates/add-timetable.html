@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Timetable</title>
+</head>
+<body>
+    <h1>Add Timetable</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="text" name="student_class" placeholder="Class" required><br><br>
+        <input type="text" name="section" placeholder="Section" required><br><br>
+        <input type="text" name="subject" placeholder="Subject" required><br><br>
+        <input type="text" name="teacher" placeholder="Teacher" required><br><br>
+
+        <select name="day" required>
+            <option value="">Select day</option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+        </select><br><br>
+
+        <label>Start time</label><br>
+        <input type="time" name="start_time" required><br><br>
+
+        <label>End time</label><br>
+        <input type="time" name="end_time" required><br><br>
+
+        <button type="submit">Add Timetable</button>
+    </form>
+
+    <br>
+    <a href="{% url 'timetable_list' %}">Back to timetable</a>
+</body>
+</html>
