@@ -7,10 +7,6 @@ from django.utils import timezone
 
 
 class CustomUser(AbstractUser):
-    ROLE_ADMIN = 'admin'
-    ROLE_TEACHER = 'teacher'
-    ROLE_STUDENT = 'student'
-
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     is_authorized = models.BooleanField(default=False)
@@ -37,29 +33,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-
-    @property
-    def role(self):
-        if self.is_admin:
-            return self.ROLE_ADMIN
-        if self.is_teacher:
-            return self.ROLE_TEACHER
-        if self.is_student:
-            return self.ROLE_STUDENT
-        return None
-
-    def set_role(self, role):
-        self.is_admin = role == self.ROLE_ADMIN
-        self.is_teacher = role == self.ROLE_TEACHER
-        self.is_student = role == self.ROLE_STUDENT
-        self.is_staff = self.is_admin
-
-    def get_dashboard_url(self):
-        if self.is_admin:
-            return 'admin_dashboard'
-        if self.is_teacher:
-            return 'teacher_dashboard'
-        return 'dashboard'
 
 
 class PasswordResetRequest(models.Model):

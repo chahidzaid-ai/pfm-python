@@ -1,10 +1,9 @@
-from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
-
-from .decorators import admin_required, student_required, teacher_required
+from django.contrib import messages
 from .models import CustomUser, PasswordResetRequest
+from django.contrib.auth.decorators import login_required
+from .decorators import admin_required, teacher_required, student_required
 
 
 def signup_view(request):
@@ -15,10 +14,6 @@ def signup_view(request):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         role = request.POST.get('role')
-
-        if role not in [CustomUser.ROLE_ADMIN, CustomUser.ROLE_TEACHER, CustomUser.ROLE_STUDENT]:
-            messages.error(request, 'Please select a valid role.')
-            return redirect('signup')
 
         if password != confirm_password:
             messages.error(request, 'Passwords do not match.')
@@ -35,9 +30,15 @@ def signup_view(request):
             last_name=last_name,
             password=password,
         )
-        user.set_role(role)
-        user.save()
 
+        if role == 'student':
+            user.is_student = True
+        elif role == 'teacher':
+            user.is_teacher = True
+        elif role == 'admin':
+            user.is_admin = True
+
+        user.save()
         messages.success(request, 'Signup successful!')
         return redirect('login')
 
@@ -53,7 +54,13 @@ def login_view(request):
 
         if user is not None:
             login(request, user)
-            return redirect(user.get_dashboard_url())
+
+            if user.is_admin:
+                return redirect('admin_dashboard')
+            elif user.is_teacher:
+                return redirect('teacher_dashboard')
+            else:
+                return redirect('dashboard')
 
         messages.error(request, 'Invalid credentials.')
 
@@ -64,10 +71,17 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
-
 @login_required
 def dashboard_view(request):
-    return redirect(request.user.get_dashboard_url())
+    if request.user.is_admin:
+        return render(request, 'home_auth/admin_dashboard.html')
+    elif request.user.is_teacher:
+        return render(request, 'home_auth/teacher_dashboard.html')
+    elif request.user.is_student:
+        return render(request, 'home_auth/student_dashboard.html')
+    else:
+        messages.error(request, "Aucun rÃ´le attribuÃ© Ã  cet utilisateur.")
+        return redirect('login')
 
 
 def forgot_password_view(request):
@@ -111,13 +125,9 @@ def reset_password_view(request, token):
         return redirect('login')
 
     return render(request, 'authentication/reset_password.html')
-
-
 @login_required
 def profile_view(request):
     return render(request, 'authentication/profile.html')
-
-
 @login_required
 def edit_profile_view(request):
     user = request.user
@@ -146,6 +156,7 @@ def edit_profile_view(request):
         return redirect('profile')
 
     return render(request, 'authentication/edit-profile.html')
+
 
 
 @login_required
