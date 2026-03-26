@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e0ecff, #f4f7fb);
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #1e3a8a;
+            text-align: center;
+        }
+
+        .message {
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .info {
+            margin-bottom: 15px;
+            padding: 14px;
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .value {
+            color: #111827;
+        }
+
+        .buttons {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Profile</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="info">
+            <div class="label">First Name</div>
+            <div class="value">{{ request.user.first_name|default:"Not set" }}</div>
+        </div>
+
+        <div class="info">
+            <div class="label">Last Name</div>
+            <div class="value">{{ request.user.last_name|default:"Not set" }}</div>
+        </div>
+
+        <div class="info">
+            <div class="label">Email</div>
+            <div class="value">{{ request.user.email }}</div>
+        </div>
+
+        <div class="info">
+            <div class="label">Username</div>
+            <div class="value">{{ request.user.username }}</div>
+        </div>
+
+        <div class="info">
+            <div class="label">Role</div>
+            <div class="value">
+                {% if request.user.is_admin %}
+                    Admin
+                {% elif request.user.is_teacher %}
+                    Teacher
+                {% elif request.user.is_student %}
+                    Student
+                {% else %}
+                    User
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a href="{% url 'edit-profile' %}" class="btn btn-primary">Edit Profile</a>
+
+            {% if request.user.is_admin %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+            {% elif request.user.is_teacher %}
+                <a href="{% url 'teacher_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+            {% else %}
+                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

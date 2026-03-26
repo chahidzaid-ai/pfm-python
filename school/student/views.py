@@ -1,13 +1,21 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Student, Parent, Timetable, Exam, Grade, Holiday
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
+
+from home_auth.decorators import admin_required, roles_required
+
+from .models import Exam, Grade, Holiday, Parent, Student, Timetable
 
 
+@login_required
+@roles_required('admin', 'teacher')
 def student_list(request):
     student_list = Student.objects.select_related('parent').all()
     return render(request, 'students/students.html', {'student_list': student_list})
 
 
+@login_required
+@admin_required
 def add_student(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
@@ -73,11 +81,15 @@ def add_student(request):
     return render(request, 'students/add-student.html')
 
 
+@login_required
+@roles_required('admin', 'teacher')
 def view_student(request, student_id):
     student = get_object_or_404(Student.objects.select_related('parent'), student_id=student_id)
     return render(request, 'students/student-details.html', {'student': student})
 
 
+@login_required
+@admin_required
 def edit_student(request, student_id):
     student = get_object_or_404(Student.objects.select_related('parent'), student_id=student_id)
     parent = student.parent
@@ -117,6 +129,8 @@ def edit_student(request, student_id):
     return render(request, 'students/edit-student.html', {'student': student})
 
 
+@login_required
+@admin_required
 def delete_student(request, student_id):
     student = get_object_or_404(Student, student_id=student_id)
 
@@ -128,11 +142,15 @@ def delete_student(request, student_id):
     return redirect('student_list')
 
 
+@login_required
+@roles_required('admin', 'teacher', 'student')
 def timetable_list(request):
     timetables = Timetable.objects.all().order_by('day', 'start_time')
     return render(request, 'students/timetable.html', {'timetables': timetables})
 
 
+@login_required
+@admin_required
 def add_timetable(request):
     if request.method == 'POST':
         Timetable.objects.create(
@@ -150,6 +168,8 @@ def add_timetable(request):
     return render(request, 'students/add-timetable.html')
 
 
+@login_required
+@admin_required
 def edit_timetable(request, timetable_id):
     timetable = get_object_or_404(Timetable, id=timetable_id)
 
@@ -169,6 +189,8 @@ def edit_timetable(request, timetable_id):
     return render(request, 'students/edit-timetable.html', {'timetable': timetable})
 
 
+@login_required
+@admin_required
 def delete_timetable(request, timetable_id):
     timetable = get_object_or_404(Timetable, id=timetable_id)
 
@@ -179,11 +201,15 @@ def delete_timetable(request, timetable_id):
     return redirect('timetable_list')
 
 
+@login_required
+@roles_required('admin', 'teacher', 'student')
 def holiday_list(request):
     holidays = Holiday.objects.all().order_by('holiday_date')
     return render(request, 'students/holidays.html', {'holidays': holidays})
 
 
+@login_required
+@admin_required
 def add_holiday(request):
     if request.method == 'POST':
         Holiday.objects.create(
@@ -197,6 +223,8 @@ def add_holiday(request):
     return render(request, 'students/add-holiday.html')
 
 
+@login_required
+@admin_required
 def edit_holiday(request, holiday_id):
     holiday = get_object_or_404(Holiday, id=holiday_id)
 
@@ -212,6 +240,8 @@ def edit_holiday(request, holiday_id):
     return render(request, 'students/edit-holiday.html', {'holiday': holiday})
 
 
+@login_required
+@admin_required
 def delete_holiday(request, holiday_id):
     holiday = get_object_or_404(Holiday, id=holiday_id)
 

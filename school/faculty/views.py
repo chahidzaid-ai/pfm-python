@@ -1,24 +1,32 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Department, Teacher
+from .models import Department, Teacher, Subject
 from django.db import models
+from home_auth.decorators import admin_required, teacher_required
 
 def index(request):
     return render(request, 'authentication/login.html')
 
-
 @login_required
 def dashboard(request):
-    return render(request, 'students/student-dashboard.html')
+    if request.user.is_admin:
+        return redirect('admin_dashboard')
+    if request.user.is_teacher:
+        return redirect('teacher_dashboard')
+    if request.user.is_student:
+        return render(request, 'students/student-dashboard.html')
 
+    messages.error(request, "Aucun role n'est attribue a cet utilisateur.")
+    return redirect('login')
 
 @login_required
+@admin_required
 def admin_dashboard(request):
     return render(request, 'Home/index.html')
 
-
 @login_required
+@teacher_required
 def teacher_dashboard(request):
     return render(request, 'students/student-dashboard.html')
 
@@ -26,12 +34,14 @@ def teacher_dashboard(request):
 # ---------------- DEPARTMENTS ----------------
 
 @login_required
+@admin_required
 def department_list(request):
     departments = Department.objects.all().order_by('name')
     return render(request, 'departments/department-list.html', {'departments': departments})
 
 
 @login_required
+@admin_required
 def add_department(request):
     teachers = Teacher.objects.all().order_by('first_name', 'last_name')
 
@@ -59,6 +69,7 @@ def add_department(request):
 
 
 @login_required
+@admin_required
 def edit_department(request, department_id):
     department = get_object_or_404(Department, id=department_id)
     teachers = Teacher.objects.all().order_by('first_name', 'last_name')
@@ -96,6 +107,7 @@ def edit_department(request, department_id):
 
 
 @login_required
+@admin_required
 def delete_department(request, department_id):
     department = get_object_or_404(Department, id=department_id)
 
@@ -110,6 +122,7 @@ def delete_department(request, department_id):
 # ---------------- TEACHERS ----------------
 
 @login_required
+@admin_required
 def teacher_list(request):
     query = request.GET.get('q', '')
     department_id = request.GET.get('department', '')
@@ -137,6 +150,7 @@ def teacher_list(request):
 
 
 @login_required
+@admin_required
 def add_teacher(request):
     departments = Department.objects.all().order_by('name')
 
@@ -180,6 +194,7 @@ def add_teacher(request):
 
 
 @login_required
+@admin_required
 def edit_teacher(request, teacher_id):
     teacher = get_object_or_404(Teacher, id=teacher_id)
     departments = Department.objects.all().order_by('name')
@@ -217,6 +232,7 @@ def edit_teacher(request, teacher_id):
 
 
 @login_required
+@admin_required
 def delete_teacher(request, teacher_id):
     teacher = get_object_or_404(Teacher, id=teacher_id)
 
@@ -225,3 +241,110 @@ def delete_teacher(request, teacher_id):
         messages.success(request, 'Teacher deleted successfully.')
 
     return redirect('teacher_list')
+
+@login_required
+@admin_required
+def subject_list(request):
+    query = request.GET.get('q', '')
+    department_id = request.GET.get('department', '')
+
+    subjects = Subject.objects.select_related('department', 'teacher').all().order_by('name')
+    departments = Department.objects.all().order_by('name')
+
+    if query:
+        subjects = subjects.filter(
+            models.Q(name__icontains=query) |
+            models.Q(code__icontains=query) |
+            models.Q(teacher__first_name__icontains=query) |
+            models.Q(teacher__last_name__icontains=query)
+        )
+
+    if department_id:
+        subjects = subjects.filter(department_id=department_id)
+
+    return render(request, 'subjects/subject-list.html', {
+        'subjects': subjects,
+        'departments': departments,
+        'query': query,
+        'selected_department': department_id,
+    })
+
+
+@login_required
+@admin_required
+def add_subject(request):
+    departments = Department.objects.all().order_by('name')
+    teachers = Teacher.objects.all().order_by('first_name', 'last_name')
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        code = request.POST.get('code')
+        department_id = request.POST.get('department')
+        teacher_id = request.POST.get('teacher')
+
+        if Subject.objects.filter(code=code).exists():
+            messages.error(request, 'Subject code already exists.')
+            return redirect('add_subject')
+
+        department = get_object_or_404(Department, id=department_id)
+        teacher = get_object_or_404(Teacher, id=teacher_id)
+
+        Subject.objects.create(
+            name=name,
+            code=code,
+            department=department,
+            teacher=teacher
+        )
+
+        messages.success(request, 'Subject added successfully.')
+        return redirect('subject_list')
+
+    return render(request, 'subjects/add-subject.html', {
+        'departments': departments,
+        'teachers': teachers
+    })
+
+
+@login_required
+@admin_required
+def edit_subject(request, subject_id):
+    subject = get_object_or_404(Subject, id=subject_id)
+    departments = Department.objects.all().order_by('name')
+    teachers = Teacher.objects.all().order_by('first_name', 'last_name')
+
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        code = request.POST.get('code')
+        department_id = request.POST.get('department')
+        teacher_id = request.POST.get('teacher')
+
+        if Subject.objects.exclude(id=subject.id).filter(code=code).exists():
+            messages.error(request, 'Another subject already uses this code.')
+            return redirect('edit_subject', subject_id=subject.id)
+
+        subject.name = name
+        subject.code = code
+        subject.department = get_object_or_404(Department, id=department_id)
+        subject.teacher = get_object_or_404(Teacher, id=teacher_id)
+        subject.save()
+
+        messages.success(request, 'Subject updated successfully.')
+        return redirect('subject_list')
+
+    return render(request, 'subjects/edit-subject.html', {
+        'subject': subject,
+        'departments': departments,
+        'teachers': teachers
+    })
+
+
+@login_required
+@admin_required
+def delete_subject(request, subject_id):
+    subject = get_object_or_404(Subject, id=subject_id)
+
+    if request.method == 'POST':
+        subject.delete()
+        messages.success(request, 'Subject deleted successfully.')
+
+    return redirect('subject_list')

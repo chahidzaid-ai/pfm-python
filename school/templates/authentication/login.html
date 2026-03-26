@@ -130,7 +130,7 @@
             {% endfor %}
         {% endif %}
 
-        <form method="POST">
+        <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
 
             <label>Email</label>

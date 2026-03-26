@@ -15,6 +15,7 @@
       <link rel="stylesheet" href="{%static 'assets/css/style.css' %}">
    </head>
    <body>
+      
       <div class="main-wrapper">
          <div class="header">
             <div class="header-left">
@@ -73,9 +74,9 @@
                            <p class="text-muted mb-0">Administrator</p>
                         </div>
                      </div>
-                     <a class="dropdown-item" href="profile.html">My Profile</a>
+                     <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
                      <a class="dropdown-item" href="inbox.html">Inbox</a>
-                     <a class="dropdown-item" href="">Logout</a>
+                     <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                   </div>
                </li>
             </ul>
@@ -124,8 +125,8 @@
                      <li class="submenu">
                         <a href="#"><i class="fas fa-book-reader"></i> <span> Subjects</span> <span class="menu-arrow"></span></a>
                         <ul>
-                           <li><a href="subjects.html">Subject List</a></li>
-                           <li><a href="add-subject.html">Subject Add</a></li>
+                           <li><a href="{% url 'subject_list' %}">Subject List</a></li>
+                           <li><a href="{% url 'add_subject' %}">Subject Add</a></li>
                            <li><a href="edit-subject.html">Subject Edit</a></li>
                         </ul>
                      </li>

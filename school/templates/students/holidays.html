@@ -178,7 +178,9 @@
         <div class="header">
             <h1>Holiday Calendar</h1>
             <div class="top-actions">
+                {% if request.user.is_admin %}
                 <a href="{% url 'add_holiday' %}" class="btn btn-add">+ Add Holiday</a>
+                {% endif %}
                 <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
             </div>
         </div>
@@ -196,7 +198,9 @@
                         <th>Title</th>
                         <th>Date</th>
                         <th>Description</th>
+                        {% if request.user.is_admin %}
                         <th>Actions</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -205,6 +209,7 @@
                         <td>{{ holiday.title }}</td>
                         <td>{{ holiday.holiday_date }}</td>
                         <td>{{ holiday.description }}</td>
+                        {% if request.user.is_admin %}
                         <td>
                             <div class="actions">
                                 <a href="{% url 'edit_holiday' holiday.id %}" class="btn-edit">Edit</a>
@@ -215,10 +220,11 @@
                                 </form>
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr class="empty-row">
-                        <td colspan="4">No holidays found.</td>
+                        <td colspan="{% if request.user.is_admin %}4{% else %}3{% endif %}">No holidays found.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
