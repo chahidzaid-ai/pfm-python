@@ -1,3 +1,4 @@
+{% if request.user.is_authenticated and request.user.is_admin%}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,3 +110,4 @@
     </div>
 </body>
 </html>
+{% endif %}

@@ -1,7 +1,7 @@
 {% extends 'Home/base.html' %}
 {% load static %}
 {% block body %}
-   
+{% if request.user.is_authenticated and request.user.is_admin %}
          <div class="page-wrapper">
             <div class="content container-fluid">
                <div class="page-header">
@@ -182,4 +182,5 @@
    </body>
    <!-- Mirrored from preschool.dreamguystech.com/html-template/add-student.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 28 Oct 2021 11:11:50 GMT -->
 </html>
+{%endif%}
 {% endblock %}

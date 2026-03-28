@@ -20,6 +20,7 @@ def teacher_dashboard(request):
     return render(request, 'students/student-dashboard.html')
 
 
+
 # ---------------- DEPARTMENTS ----------------
 
 @login_required

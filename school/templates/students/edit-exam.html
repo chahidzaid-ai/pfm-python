@@ -1,10 +1,10 @@
-{% if request.user.is_authenticated and request.user.is_admin %}
+{% if request.user.is_authenticated and request.user.is_admin or request.user.is_teacher %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Holiday</title>
+    <title>Edit Exam</title>
     <style>
         * {
             box-sizing: border-box;
@@ -23,7 +23,7 @@
             background: white;
             padding: 30px;
             border-radius: 14px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
         }
 
         h1 {
@@ -39,7 +39,7 @@
             color: #374151;
         }
 
-        input, textarea {
+        input {
             width: 100%;
             padding: 12px;
             margin-bottom: 18px;
@@ -48,13 +48,8 @@
             outline: none;
         }
 
-        input:focus, textarea:focus {
+        input:focus {
             border-color: #2563eb;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
         }
 
         .buttons {
@@ -73,47 +68,43 @@
         }
 
         .btn-save {
-            background: #2563eb;
+            background: #f59e0b;
             color: white;
-        }
-
-        .btn-save:hover {
-            background: #1d4ed8;
         }
 
         .btn-back {
             background: #6b7280;
             color: white;
         }
-
-        .btn-back:hover {
-            background: #4b5563;
-        }
     </style>
 </head>
 <body>
     <div class="form-container">
-        <h1>Add Holiday</h1>
+        <h1>Edit Exam</h1>
 
         <form method="POST">
             {% csrf_token %}
 
-            <label>Title</label>
-            <input type="text" name="title" required>
+            <label>Exam Title</label>
+            <input type="text" name="title" value="{{ exam.title }}" required>
 
-            <label>Date de début</label>
-            <input type="date" name="holiday_date" required>
+            <label>Class</label>
+            <input type="text" name="student_class" value="{{ exam.student_class }}" required>
 
-            <label>Description</label>
-            <textarea name="description"></textarea>
+            <label>Subject</label>
+            <input type="text" name="subject" value="{{ exam.subject }}" required>
+
+            <label>Exam Date</label>
+            <input type="date" name="exam_date" value="{{ exam.exam_date|date:'Y-m-d' }}" required>
 
             <div class="buttons">
-                <button type="submit" class="btn btn-save">Add Holiday</button>
-                <a href="{% url 'holiday_list' %}" class="btn btn-back">Back</a>
+                <button type="submit" class="btn btn-save">Save Changes</button>
+                <a href="{% url 'exam_list' %}" class="btn btn-back">Back</a>
             </div>
         </form>
     </div>
 </body>
 </html>
-
+{% else %}
+   <h2 style="text-align: center; margin-top: 50px; color: #6b7280;">You do not have permission to access this page.</h2>
 {% endif %}

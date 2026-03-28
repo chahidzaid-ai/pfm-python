@@ -113,7 +113,9 @@
         {% endif %}
 
         <div class="top-actions">
-            <a href="{% url 'add_department' %}" class="btn btn-add">+ Add Department</a>
+            {% if request.user.is_authenticated and request.user.is_admin %}
+                <a href="{% url 'add_department' %}" class="btn btn-add">+ Add Department</a>
+            {% endif %}
             <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
         </div>
 
@@ -143,12 +145,14 @@
                         {% endif %}
                     </td>
                     <td>
+                        {% if request.user.is_authenticated and request.user.is_admin%}
                         <a href="{% url 'edit_department' department.id %}" class="btn-edit">Edit</a>
 
                         <form action="{% url 'delete_department' department.id %}" method="POST" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn-delete">Delete</button>
                         </form>
+                        {% endif %}
                     </td>
                 </tr>
                 {% empty %}

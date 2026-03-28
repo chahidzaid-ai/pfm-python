@@ -129,9 +129,87 @@ def delete_student(request, student_id):
 
 
 def timetable_list(request):
-    timetables = Timetable.objects.all().order_by('day', 'start_time')
-    return render(request, 'students/timetable.html', {'timetables': timetables})
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
+    timetables = Timetable.objects.all().order_by('start_time', 'day')
+
+    time_slots = []
+    seen = set()
+
+    for t in timetables:
+        key = (t.start_time, t.end_time)
+        if key not in seen:
+            seen.add(key)
+            time_slots.append(key)
+
+    table_rows = []
+    for start_time, end_time in time_slots:
+        row = {
+            'time': f"{start_time.strftime('%H:%M')} - {end_time.strftime('%H:%M')}",
+            'cells': []
+        }
+
+        for day in days:
+            entry = None
+            for t in timetables:
+                if t.day == day and t.start_time == start_time and t.end_time == end_time:
+                    entry = t
+                    break
+
+            row['cells'].append(entry)
+
+        table_rows.append(row)
+
+    return render(request, 'students/timetable.html', {
+        'days': days,
+        'table_rows': table_rows,
+    })
+
+
+def add_timetable(request):
+    if request.method == 'POST':
+        Timetable.objects.create(
+            student_class=request.POST.get('student_class'),
+            section=request.POST.get('section'),
+            subject=request.POST.get('subject'),
+            teacher=request.POST.get('teacher'),
+            day=request.POST.get('day'),
+            start_time=request.POST.get('start_time'),
+            end_time=request.POST.get('end_time'),
+        )
+        messages.success(request, 'Timetable added successfully.')
+        return redirect('timetable_list')
+
+    return render(request, 'students/add-timetable.html')
+
+
+def edit_timetable(request, timetable_id):
+    timetable = get_object_or_404(Timetable, id=timetable_id)
+
+    if request.method == 'POST':
+        timetable.student_class = request.POST.get('student_class')
+        timetable.section = request.POST.get('section')
+        timetable.subject = request.POST.get('subject')
+        timetable.teacher = request.POST.get('teacher')
+        timetable.day = request.POST.get('day')
+        timetable.start_time = request.POST.get('start_time')
+        timetable.end_time = request.POST.get('end_time')
+        timetable.save()
+
+        messages.success(request, 'Timetable updated successfully.')
+        return redirect('timetable_list')
+
+    return render(request, 'students/edit-timetable.html', {'timetable': timetable})
+
+
+def delete_timetable(request, timetable_id):
+    timetable = get_object_or_404(Timetable, id=timetable_id)
+
+    if request.method == 'POST':
+        timetable.delete()
+        messages.success(request, 'Timetable deleted successfully.')
+
+    return redirect('timetable_list')
 
 def add_timetable(request):
     if request.method == 'POST':
@@ -184,6 +262,7 @@ def holiday_list(request):
     return render(request, 'students/holidays.html', {'holidays': holidays})
 
 
+
 def add_holiday(request):
     if request.method == 'POST':
         Holiday.objects.create(
@@ -220,3 +299,53 @@ def delete_holiday(request, holiday_id):
         messages.success(request, 'Holiday deleted successfully.')
 
     return redirect('holiday_list')
+
+def exam_list(request):
+    exams = Exam.objects.all().order_by('exam_date')
+    return render(request, 'students/exam-list.html', {'exams': exams})
+
+
+def add_exam(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        student_class = request.POST.get('student_class')
+        subject = request.POST.get('subject')
+        exam_date = request.POST.get('exam_date')
+
+        Exam.objects.create(
+            title=title,
+            student_class=student_class,
+            subject=subject,
+            exam_date=exam_date
+        )
+
+        messages.success(request, 'Exam added successfully.')
+        return redirect('exam_list')
+
+    return render(request, 'students/add-exam.html')
+
+
+def edit_exam(request, exam_id):
+    exam = get_object_or_404(Exam, id=exam_id)
+
+    if request.method == 'POST':
+        exam.title = request.POST.get('title')
+        exam.student_class = request.POST.get('student_class')
+        exam.subject = request.POST.get('subject')
+        exam.exam_date = request.POST.get('exam_date')
+        exam.save()
+
+        messages.success(request, 'Exam updated successfully.')
+        return redirect('exam_list')
+
+    return render(request, 'students/edit-exam.html', {'exam': exam})
+
+
+def delete_exam(request, exam_id):
+    exam = get_object_or_404(Exam, id=exam_id)
+
+    if request.method == 'POST':
+        exam.delete()
+        messages.success(request, 'Exam deleted successfully.')
+
+    return redirect('exam_list')    

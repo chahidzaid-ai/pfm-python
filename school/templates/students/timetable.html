@@ -1,240 +1,313 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timetable</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
+<style>
+ .timetable-page {
+    padding: 24px;
+    background: #f4f7fb;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+}
 
-        body {
-            background: #f4f7fb;
-            padding: 30px;
-            color: #333;
-        }
+/* Header */
+.timetable-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
 
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-        }
+.timetable-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
+.timetable-add-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s ease;
+    border: none;
+}
 
-        .header h1 {
-            font-size: 30px;
-            color: #1e3a8a;
-        }
+.timetable-add-btn:hover {
+    background: #1d4ed8;
+    color: #fff;
+}
 
-        .top-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
+/* Table wrapper */
+.timetable-wrapper {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    overflow-x: auto;
+}
 
-        .btn {
-            display: inline-block;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
-        }
+/* Table */
+.timetable-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 1000px;
+}
 
-        .btn-add {
-            background: #2563eb;
-            color: white;
-        }
+.timetable-table thead th {
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    padding: 16px 12px;
+    border: 1px solid #e2e8f0;
+}
 
-        .btn-add:hover {
-            background: #1d4ed8;
-        }
+.timetable-table thead th:first-child {
+    border-top-left-radius: 12px;
+}
 
-        .btn-back {
-            background: #6b7280;
-            color: white;
-        }
+.timetable-table thead th:last-child {
+    border-top-right-radius: 12px;
+}
 
-        .btn-back:hover {
-            background: #4b5563;
-        }
+.timetable-table tbody th {
+    background: #e2e8f0;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    padding: 14px 10px;
+    border: 1px solid #cbd5e1;
+    width: 140px;
+}
 
-        .message {
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #86efac;
-        }
+.timetable-table td {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    text-align: center;
+    vertical-align: middle;
+    min-width: 170px;
+    height: 140px;
+    padding: 10px;
+    transition: background 0.3s ease;
+}
 
-        .table-wrapper {
-            overflow-x: auto;
-        }
+.timetable-table td:hover {
+    background: #eef4ff;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 900px;
-        }
+/* Subject card inside cell */
+.subject-box {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 12px 10px;
+    box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
 
-        thead {
-            background: #1e3a8a;
-            color: white;
-        }
+.subject-box strong {
+    font-size: 15px;
+    font-weight: 700;
+    display: block;
+}
 
-        th, td {
-            padding: 14px 12px;
-            text-align: center;
-            border-bottom: 1px solid #e5e7eb;
-        }
+.subject-box .teacher-name,
+.subject-box .class-info,
+.subject-box .section-info,
+.subject-box .time-info {
+    font-size: 13px;
+    opacity: 0.95;
+}
 
-        tbody tr:hover {
-            background: #f9fafb;
-        }
+/* Empty cell */
+.empty-cell {
+    color: #94a3b8;
+    font-size: 14px;
+    font-weight: 500;
+}
 
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
+/* Buttons inside subject box */
+.timetable-actions {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
 
-        .btn-edit {
-            background: #f59e0b;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-        }
+.timetable-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
 
-        .btn-edit:hover {
-            background: #d97706;
-        }
+.timetable-btn-edit {
+    background: #f59e0b;
+    color: white;
+}
 
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: none;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.timetable-btn-edit:hover {
+    background: #d97706;
+    color: white;
+}
 
-        .btn-delete:hover {
-            background: #dc2626;
-        }
+.timetable-btn-delete {
+    background: #ef4444;
+    color: white;
+}
 
-        .empty-row td {
-            padding: 25px;
-            color: #6b7280;
-            font-style: italic;
-        }
+.timetable-btn-delete:hover {
+    background: #dc2626;
+    color: white;
+}
 
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
+/* Message alerts */
+.timetable-alert {
+    padding: 14px 16px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    font-weight: 600;
+}
 
-            .container {
-                padding: 15px;
-            }
+.timetable-alert-success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
 
-            .header h1 {
-                font-size: 24px;
-            }
+.timetable-alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+.timetable-back-btn {
+    display: inline-block;
+    background: #64748b;
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
 
-            th, td {
-                padding: 10px 8px;
-                font-size: 14px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Timetable</h1>
-            <div class="top-actions">
-                <a href="{% url 'add_timetable' %}" class="btn btn-add">+ Add Timetable</a>
-                <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
+.timetable-back-btn:hover {
+    background: #475569;
+    color: #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .timetable-page {
+        padding: 12px;
+    }
+
+    .timetable-title {
+        font-size: 22px;
+    }
+
+    .timetable-table td,
+    .timetable-table tbody th,
+    .timetable-table thead th {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .subject-box {
+        padding: 8px;
+    }
+
+    .subject-box strong {
+        font-size: 13px;
+    }
+
+    .subject-box .teacher-name,
+    .subject-box .class-info,
+    .subject-box .section-info,
+    .subject-box .time-info {
+        font-size: 11px;
+    }
+}
+</style>
+<div class="timetable-page">
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="timetable-alert timetable-alert-success">
+                {{ message }}
             </div>
-        </div>
+        {% endfor %}
+    {% endif %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="message">
-                    {{ message }}
-                </div>
-            {% endfor %}
+    <div class="timetable-header">
+        <h2 class="timetable-title">Weekly Timetable</h2>
+        <a href="{% url 'dashboard' %}" class="timetable-back-btn">← Dashboard</a>
+        {% if request.user.is_authenticated and request.user.is_admin or request.user.is_teacher %}
+        <a href="{% url 'add_timetable' %}" class="timetable-add-btn">+ Add Timetable</a>
         {% endif %}
-
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Class</th>
-                        <th>Section</th>
-                        <th>Subject</th>
-                        <th>Teacher</th>
-                        <th>Day</th>
-                        <th>Start</th>
-                        <th>End</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in timetables %}
-                    <tr>
-                        <td>{{ item.student_class }}</td>
-                        <td>{{ item.section }}</td>
-                        <td>{{ item.subject }}</td>
-                        <td>{{ item.teacher }}</td>
-                        <td>{{ item.day }}</td>
-                        <td>{{ item.start_time }}</td>
-                        <td>{{ item.end_time }}</td>
-                        <td>
-                            <div class="actions">
-                                <a href="{% url 'edit_timetable' item.id %}" class="btn-edit">Edit</a>
-
-                                <form action="{% url 'delete_timetable' item.id %}" method="POST" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn-delete">Delete</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr class="empty-row">
-                        <td colspan="8">No timetable found.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
     </div>
-</body>
-</html>
+
+    <div class="timetable-wrapper">
+        <table class="timetable-table">
+            <thead>
+                <tr>
+                    <th>Time / Day</th>
+                    {% for day in days %}
+                        <th>{{ day }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in table_rows %}
+                <tr>
+                    <th>{{ row.time }}</th>
+
+                    {% for cell in row.cells %}
+                        <td>
+                            {% if cell %}
+                                <div class="subject-box">
+                                    <strong>{{ cell.subject }}</strong>
+                                    <div class="teacher-name">{{ cell.teacher }}</div>
+                                    <div class="class-info">Class: {{ cell.student_class }}</div>
+                                    <div class="section-info">Section: {{ cell.section }}</div>
+                                    <div class="time-info">{{ cell.start_time }} - {{ cell.end_time }}</div>
+
+                                    <div class="timetable-actions">
+                                        {% if request.user.is_authenticated and request.user.is_admin or request.user.is_teacher %}
+                                        <a href="{% url 'edit_timetable' cell.id %}" class="timetable-btn timetable-btn-edit">Edit</a>
+
+                                        <form action="{% url 'delete_timetable' cell.id %}" method="post" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="timetable-btn timetable-btn-delete">Delete</button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="empty-cell">Empty</div>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>

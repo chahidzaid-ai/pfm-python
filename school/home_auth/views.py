@@ -74,7 +74,7 @@ def logout_view(request):
 @login_required
 def dashboard_view(request):
     if request.user.is_admin:
-        return render(request, 'home_auth/admin_dashboard.html')
+        return render(request, 'home_auth/dashboard.html')
     elif request.user.is_teacher:
         return render(request, 'home_auth/teacher_dashboard.html')
     elif request.user.is_student:

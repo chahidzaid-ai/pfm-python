@@ -69,10 +69,7 @@
                         <div class="avatar avatar-sm">
                            <img src="{%static 'assets/img/profiles/avatar-01.jpg'%}" alt="User Image" class="avatar-img rounded-circle">
                         </div>
-                        <div class="user-text">
-                           {% comment %} <h6>{{user.username}}</h6> {% endcomment %}
-                           <p class="text-muted mb-0">Administrator</p>
-                        </div>
+                        
                      </div>
                      <a class="dropdown-item" href="{% url 'profile' %}">My Profile</a>
                      <a class="dropdown-item" href="inbox.html">Inbox</a>
@@ -91,11 +88,13 @@
                      <li class="submenu active">
                         <a href="#"><i class="fas fa-user-graduate"></i> <span> Dashboard</span> <span class="menu-arrow"></span></a>
                         <ul>
+                           
                            <li><a href="index.html" class="active">Admin Dashboard</a></li>
                            <li><a href="teacher-dashboard.html">Teacher Dashboard</a></li>
                            <li><a href="student-dashboard.html">Student Dashboard</a></li>
                         </ul>
                      </li>
+                     {% if request.user.is_authenticated and request.user.is_admin %}
                      <li class="submenu">
                         <a href="#"><i class="fas fa-user-graduate"></i> <span> Students</span> <span class="menu-arrow"></span></a>
                         <ul>
@@ -103,31 +102,42 @@
                            <li><a href="student-details.html">Student View</a></li>
                            <li><a href="{% url 'add_student' %}">Student Add</a></li>
                            <li><a href="edit-student.html">Student Edit</a></li>
+                           
                         </ul>
+                        {% endif %}
                      </li>
                      <li class="submenu">
+                           
                         <a href="#"><i class="fas fa-chalkboard-teacher"></i> <span> Teachers</span> <span class="menu-arrow"></span></a>
                         <ul>
                            <li><a href="{% url 'teacher_list' %}">Teacher List</a></li>
+                           {% if request.user.is_authenticated and request.user.is_admin %}
                            <li><a href="teacher-details.html">Teacher View</a></li>
                            <li><a href="{% url 'add_teacher' %}">Teacher Add</a></li>
                            <li><a href="edit_teacher.html">Teacher Edit</a></li>
+                           {% endif %}
                         </ul>
+                          
                      </li>
                      <li class="submenu">
                         <a href="#"><i class="fas fa-building"></i> <span> Departments</span> <span class="menu-arrow"></span></a>
                         <ul>
                            <li><a href="{% url 'department_list' %}">Department List</a></li>
+                           {% if request.user.is_authenticated and request.user.is_admin%}
                            <li><a href="{% url 'add_department' %}">Department Add</a></li>
                            <li><a href="edit-department.html">Department Edit</a></li>
+                           {% endif %}
                         </ul>
+                           
                      </li>
                      <li class="submenu">
                         <a href="#"><i class="fas fa-book-reader"></i> <span> Subjects</span> <span class="menu-arrow"></span></a>
                         <ul>
                            <li><a href="{% url 'subject_list' %}">Subject List</a></li>
+                              {% if request.user.is_authenticated and request.user.is_admin %}
                            <li><a href="{% url 'add_subject' %}">Subject Add</a></li>
                            <li><a href="edit-subject.html">Subject Edit</a></li>
+                           {% endif %}
                         </ul>
                      </li>
                      <li class="menu-title">
@@ -151,7 +161,7 @@
                         <a href="fees.html"><i class="fas fa-comment-dollar"></i> <span>Fees</span></a>
                      </li>
                      <li>
-                        <a href="exam.html"><i class="fas fa-clipboard-list"></i> <span>Exam list</span></a>
+                        <a href="{% url 'exam_list' %}"><i class="fas fa-clipboard-list"></i> <span>Exam list</span></a>
                      </li>
                      <li>
                         <a href="event.html"><i class="fas fa-calendar-day"></i> <span>Events</span></a>
@@ -160,7 +170,7 @@
                         <a href="{% url 'timetable_list' %}"><i class="fas fa-table"></i><span>Time Table</span></a>
                      </li>
                      <li>
-                        <a href="{% url 'holiday_list' %}"><i class="fas fa-holly-berry"></i> <span>Holidays</span></a>
+                        <a href="{% url 'holiday_list' %}">Holidays</a>
                      </li>
                      <li>
                         <a href="library.html"><i class="fas fa-book"></i> <span>Library</span></a>
