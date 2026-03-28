@@ -112,9 +112,9 @@
                         <ul>
                            <li><a href="{% url 'teacher_list' %}">Teacher List</a></li>
                            {% if request.user.is_authenticated and request.user.is_admin %}
-                           <li><a href="teacher-details.html">Teacher View</a></li>
+                           
                            <li><a href="{% url 'add_teacher' %}">Teacher Add</a></li>
-                           <li><a href="edit_teacher.html">Teacher Edit</a></li>
+                           
                            {% endif %}
                         </ul>
                           
@@ -125,7 +125,7 @@
                            <li><a href="{% url 'department_list' %}">Department List</a></li>
                            {% if request.user.is_authenticated and request.user.is_admin%}
                            <li><a href="{% url 'add_department' %}">Department Add</a></li>
-                           <li><a href="edit-department.html">Department Edit</a></li>
+                           
                            {% endif %}
                         </ul>
                            
@@ -136,7 +136,7 @@
                            <li><a href="{% url 'subject_list' %}">Subject List</a></li>
                               {% if request.user.is_authenticated and request.user.is_admin %}
                            <li><a href="{% url 'add_subject' %}">Subject Add</a></li>
-                           <li><a href="edit-subject.html">Subject Edit</a></li>
+                           
                            {% endif %}
                         </ul>
                      </li>
@@ -155,7 +155,7 @@
                         </ul>
                      </li>
                      <li>
-                        <a href="holiday.html"><i class="fas fa-holly-berry"></i> <span>Holiday</span></a>
+                        <a href="{% url 'holiday_list' %}"><i class="fas fa-holly-berry"></i> <span>Holiday</span></a>
                      </li>
                      <li>
                         <a href="fees.html"><i class="fas fa-comment-dollar"></i> <span>Fees</span></a>

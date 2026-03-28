@@ -81,7 +81,9 @@
         {% endif %}
 
         <div class="top-actions">
+            {% if request.user.is_authenticated and request.user.is_admin %}
             <a href="{% url 'add_teacher' %}" class="btn btn-add">+ Add Teacher</a>
+            {% endif %}
             <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
         </div>
 
@@ -122,11 +124,13 @@
                     <td>{% if teacher.department %}{{ teacher.department.name }}{% else %}No Department{% endif %}</td>
                     <td>{{ teacher.seniority }} year(s)</td>
                     <td>
+                        {% if request.user.is_authenticated and request.user.is_admin %}
                         <a href="{% url 'edit_teacher' teacher.id %}" class="btn-edit">Edit</a>
                         <form action="{% url 'delete_teacher' teacher.id %}" method="POST" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn-delete">Delete</button>
                         </form>
+                        {% endif %}
                     </td>
                 </tr>
                 {% empty %}
