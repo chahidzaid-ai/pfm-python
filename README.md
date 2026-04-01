@@ -176,7 +176,18 @@ Example:
 ```html
 <a href="{% url 'holiday_list' %}">Holidays</a>
 ```
+## Identifiants de test
+Admin :
+- username : admin1@admin.com
+- password : admin123
 
+Teacher :
+- username : teacher@teacher.com
+- password : teacher123
+
+Student :
+- username : student@student.com
+- password : student123
 ---
 
 ## 📌 Future Improvements
