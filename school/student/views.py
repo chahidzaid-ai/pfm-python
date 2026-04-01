@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+
+from home_auth.models import CustomUser
 from .models import Student, Parent, Timetable, Exam, Grade, Holiday
 
 
@@ -348,4 +350,26 @@ def delete_exam(request, exam_id):
         exam.delete()
         messages.success(request, 'Exam deleted successfully.')
 
-    return redirect('exam_list')    
+    return redirect('exam_list')  
+  
+def add_grade(request, exam_id):
+    exam = get_object_or_404(Exam, id=exam_id)
+    students = CustomUser.objects.filter(is_student=True)
+
+    if request.method == 'POST':
+        student_id = request.POST.get('student')
+        marks = request.POST.get('marks')
+
+        Grade.objects.create(
+            exam=exam,
+            student_id=student_id,
+            marks=marks
+        )
+
+        messages.success(request, "Grade added successfully")
+        return redirect('exam_list')
+
+    return render(request, 'students/add-grade.html', {
+        'exam': exam,
+        'students': students
+    })

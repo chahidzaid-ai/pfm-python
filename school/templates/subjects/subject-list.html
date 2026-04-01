@@ -1,9 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subject List</title>
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
     <style>
         * { box-sizing: border-box; font-family: Arial, sans-serif; }
         body { background: #f4f7fb; margin: 0; padding: 30px; }
@@ -69,8 +66,7 @@
             cursor: pointer;
         }
     </style>
-</head>
-<body>
+
     <div class="container">
         <h1>Subject List</h1>
 
@@ -137,5 +133,10 @@
             </tbody>
         </table>
     </div>
-</body>
-</html>
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+
+{% endblock %}

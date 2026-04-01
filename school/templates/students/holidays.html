@@ -1,189 +1,189 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holiday Calendar</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
+
+<style>
+    .main-content-area {
+        padding: 30px;
+        margin-left: 270px;
+        margin-top: 20px;
+        transition: margin-left 0.3s ease;
+        transition: margin-top 0.3s ease;
+        color: #333;
+    }
+
+    .main-content-area.sidebar-open {
+        margin-left: 90px;
+    }
+
+    .container-box {
+        width: 100%;
+        background: #ffffff;
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .header {
+    display: relative;
+    justify-content: space-between;
+    align-items: left;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+    .header h1 {
+        font-size: 30px;
+        color: #1e3a8a;
+        margin: 0;
+    }
+
+   .top-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+    .btn {
+        display: inline-block;
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: bold;
+        transition: 0.3s;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-add {
+        background: #2563eb;
+        color: white;
+    }
+
+    .btn-add:hover {
+        background: #1d4ed8;
+    }
+
+    .btn-back {
+        background: #6b7280;
+        color: white;
+    }
+
+    .btn-back:hover {
+        background: #4b5563;
+    }
+
+    .message {
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #86efac;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px;
+    }
+
+    thead {
+        background: #1e3a8a;
+        color: white;
+    }
+
+    th, td {
+        padding: 14px 12px;
+        text-align: center;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody tr:hover {
+        background: #f9fafb;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-edit {
+        background: #f59e0b;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .btn-edit:hover {
+        background: #d97706;
+    }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .btn-delete:hover {
+        background: #dc2626;
+    }
+
+    .empty-row td {
+        padding: 25px;
+        color: #6b7280;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .main-content-area,
+        .main-content-area.sidebar-open {
+            margin-left: 0;
+            padding: 15px;
         }
 
-        body {
-            background: #f4f7fb;
-            padding: 30px;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            background: #ffffff;
-            border-radius: 14px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 25px;
+        .container-box {
+            padding: 15px;
         }
 
         .header h1 {
-            font-size: 30px;
-            color: #1e3a8a;
-        }
-
-        .top-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            transition: 0.3s;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-add {
-            background: #2563eb;
-            color: white;
-        }
-
-        .btn-add:hover {
-            background: #1d4ed8;
-        }
-
-        .btn-back {
-            background: #6b7280;
-            color: white;
-        }
-
-        .btn-back:hover {
-            background: #4b5563;
-        }
-
-        .message {
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #86efac;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 700px;
-        }
-
-        thead {
-            background: #1e3a8a;
-            color: white;
+            font-size: 24px;
         }
 
         th, td {
-            padding: 14px 12px;
-            text-align: center;
-            border-bottom: 1px solid #e5e7eb;
+            padding: 10px 8px;
+            font-size: 14px;
         }
+    }
+</style>
 
-        tbody tr:hover {
-            background: #f9fafb;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn-edit {
-            background: #f59e0b;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .btn-edit:hover {
-            background: #d97706;
-        }
-
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: none;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn-delete:hover {
-            background: #dc2626;
-        }
-
-        .empty-row td {
-            padding: 25px;
-            color: #6b7280;
-            font-style: italic;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            .header h1 {
-                font-size: 24px;
-            }
-
-            th, td {
-                padding: 10px 8px;
-                font-size: 14px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Holiday Calendar</h1>
+<div class="main-content-area" id="mainContentArea">
+    <div class="container-box">
+        
             <div class="top-actions">
                 {% if request.user.is_authenticated and request.user.is_admin %}
-                <a href="{% url 'add_holiday' %}" class="btn btn-add">+ Add Holiday</a>
+                    <a href="{% url 'add_holiday' %}" class="btn btn-add">+ Add Holiday</a>
                 {% endif %}
                 <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
             </div>
-        </div>
+        
 
         {% if messages %}
             {% for message in messages %}
@@ -197,9 +197,12 @@
                     <tr>
                         <th>Title</th>
                         <th>Date</th>
-                        
                         <th>Description</th>
+                         {% if request.user.is_authenticated %}
+                {% if request.user.is_admin or request.user.is_teacher %}
                         <th>Actions</th>
+                {% endif %}
+            {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -211,12 +214,12 @@
                         <td>
                             <div class="actions">
                                 {% if request.user.is_authenticated and request.user.is_admin %}
-                                <a href="{% url 'edit_holiday' holiday.id %}" class="btn-edit">Edit</a>
+                                    <a href="{% url 'edit_holiday' holiday.id %}" class="btn-edit">Edit</a>
 
-                                <form action="{% url 'delete_holiday' holiday.id %}" method="POST" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn-delete">Delete</button>
-                                </form>
+                                    <form action="{% url 'delete_holiday' holiday.id %}" method="POST" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-delete">Delete</button>
+                                    </form>
                                 {% endif %}
                             </div>
                         </td>
@@ -230,5 +233,30 @@
             </table>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const content = document.getElementById("mainContentArea");
+
+        const toggleBtn =
+            document.querySelector("#toggle_btn") ||
+            document.querySelector(".mobile_btn") ||
+            document.querySelector(".menu-toggle") ||
+            document.querySelector(".sidebar-toggle");
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener("click", function () {
+                content.classList.toggle("sidebar-open");
+            });
+        }
+    });
+</script>
+
+{% endblock %}

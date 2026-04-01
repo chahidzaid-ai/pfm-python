@@ -1,10 +1,8 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
 {% if request.user.is_authenticated and request.user.is_admin or request.user.is_teacher %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Exam</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -77,8 +75,7 @@
             color: white;
         }
     </style>
-</head>
-<body>
+
     <div class="form-container">
         <h1>Add Exam</h1>
 
@@ -103,8 +100,16 @@
             </div>
         </form>
     </div>
+    </div>
+      <script src="{%static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+      <script src="{%static 'assets/js/popper.min.js' %}"></script>
+      <script src="{%static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+      <script src="{%static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+      <script src="{%static 'assets/js/script.js' %}"></script>
+   
 </body>
 </html>
 {% else %}
     <h2 style="text-align: center; margin-top: 50px; color: #6b7280;">You do not have permission to access this page.</h2>
 {% endif %}
+{% endblock %}

@@ -1,10 +1,8 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
 {% if request.user.is_authenticated and request.user.is_admin %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Holiday</title>
+
     <style>
         * {
             box-sizing: border-box;
@@ -90,8 +88,7 @@
             background: #4b5563;
         }
     </style>
-</head>
-<body>
+
     <div class="form-container">
         <h1>Add Holiday</h1>
 
@@ -113,7 +110,12 @@
             </div>
         </form>
     </div>
-</body>
-</html>
-
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
 {% endif %}
+{% endblock %}
+
+

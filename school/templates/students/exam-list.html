@@ -1,153 +1,151 @@
+{% extends 'Home/base.html' %}
+{% load static %}
+{% block body %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exam List</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
+<style>
+    .main-content-area {
+    padding: 30px;
+    margin-left: 270px;
+    margin-top: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content-area.sidebar-open {
+    margin-left: 70px;
+}
+
+    .exam-container {
+        width: 100%;
+        background: #fff;
+        border-radius: 14px;
+        padding: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    .header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .page-title {
+        margin: 0;
+        color: #1e3a8a;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .btn-add {
+        background: #2563eb;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .message {
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #86efac;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px;
+    }
+
+    thead {
+        background: #1e3a8a;
+        color: white;
+    }
+
+    th, td {
+        padding: 14px 12px;
+        text-align: center;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    tbody tr:hover {
+        background: #f9fafb;
+    }
+
+    .actions {
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .btn-edit {
+        background: #f59e0b;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 6px;
+        border: none;
+        font-size: 13px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .empty-row td {
+        padding: 25px;
+        color: #6b7280;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .main-content-area,
+        .main-content-area.sidebar-open {
+            margin-left: 0;
+            padding: 15px;
         }
 
-        body {
-            background: #f4f7fb;
-            padding: 30px;
-            margin: 0;
-            color: #333;
+        .exam-container {
+            padding: 15px;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: auto;
-            background: white;
-            border-radius: 14px;
-            padding: 25px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        .header-bar {
+            flex-direction: column;
+            align-items: flex-start;
         }
+    }
+</style>
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
+<div class="main-content-area" id="mainContentArea">
+    <div class="exam-container">
 
-        .header h1 {
-            margin: 0;
-            color: #1e3a8a;
-            font-size: 30px;
-        }
+        <div class="header-bar">
+            <h1 class="page-title">Exam List</h1>
 
-        .top-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-add {
-            background: #2563eb;
-            color: white;
-        }
-
-        .btn-back {
-            background: #6b7280;
-            color: white;
-        }
-
-        .btn-edit {
-            background: #f59e0b;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-        }
-
-        .btn-delete {
-            background: #ef4444;
-            color: white;
-            padding: 8px 14px;
-            border-radius: 6px;
-            border: none;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .message {
-            padding: 12px 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #86efac;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 700px;
-        }
-
-        thead {
-            background: #1e3a8a;
-            color: white;
-        }
-
-        th, td {
-            padding: 14px 12px;
-            text-align: center;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        tbody tr:hover {
-            background: #f9fafb;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .empty-row td {
-            padding: 25px;
-            color: #6b7280;
-            font-style: italic;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>Exam List</h1>
-            <div class="top-actions">
-                {% if request.user.is_authenticated and request.user.is_admin or request.user.is_teacher %}
-                <a href="{% url 'add_exam' %}" class="btn btn-add">+ Add Exam</a>
+            {% if request.user.is_authenticated %}
+                {% if request.user.is_admin or request.user.is_teacher %}
+                    <a href="{% url 'add_exam' %}" class="btn-add">Add Exam</a>
                 {% endif %}
-                <a href="{% url 'dashboard' %}" class="btn btn-back">Back to Dashboard</a>
-            </div>
+            {% endif %}
         </div>
 
         {% if messages %}
@@ -164,7 +162,11 @@
                         <th>Class</th>
                         <th>Subject</th>
                         <th>Exam Date</th>
+                       {% if request.user.is_authenticated %}
+                {% if request.user.is_admin or request.user.is_teacher %}  
                         <th>Actions</th>
+                {% endif %}
+            {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -176,12 +178,14 @@
                         <td>{{ exam.exam_date }}</td>
                         <td>
                             <div class="actions">
-                                {% if request.user.is_authenticated and request.user.is_admin or request.user.is_teacher %}
-                                <a href="{% url 'edit_exam' exam.id %}" class="btn-edit">Edit</a>
-                                <form action="{% url 'delete_exam' exam.id %}" method="POST" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn-delete">Delete</button>
-                                </form>
+                                {% if request.user.is_authenticated %}
+                                    {% if request.user.is_admin or request.user.is_teacher %}
+                                        <a href="{% url 'edit_exam' exam.id %}" class="btn-edit">Edit</a>
+                                        <form action="{% url 'delete_exam' exam.id %}" method="POST" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn-delete">Delete</button>
+                                        </form>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </td>
@@ -194,6 +198,32 @@
                 </tbody>
             </table>
         </div>
+
     </div>
-</body>
-</html>
+</div>
+
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/popper.min.js' %}"></script>
+<script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const content = document.getElementById("mainContentArea");
+
+        const toggleBtn =
+            document.querySelector("#toggle_btn") ||
+            document.querySelector(".mobile_btn") ||
+            document.querySelector(".menu-toggle") ||
+            document.querySelector(".sidebar-toggle");
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener("click", function () {
+                content.classList.toggle("sidebar-open");
+            });
+        }
+    });
+</script>
+
+{% endblock %}

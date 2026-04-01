@@ -1,5 +1,5 @@
 from django.db import models
-
+from home_auth.models import CustomUser
 
 class Parent(models.Model):
     father_name = models.CharField(max_length=100)
@@ -74,12 +74,12 @@ class Exam(models.Model):
 
 
 class Grade(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    mark = models.FloatField()
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    marks = models.FloatField()
 
     def __str__(self):
-        return f"{self.student} - {self.exam} - {self.mark}"
+        return f"{self.student.username} - {self.exam.subject}"
 
 
 class Holiday(models.Model):
